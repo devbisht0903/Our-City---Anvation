@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OurCity — Public Infrastructure & Budget Transparency</title>
+  <meta name="description" content="OurCity provides transparent public infrastructure monitoring, tender disclosure, contractor performance records, and independent AI budget analysis.">
+  
+  <!-- Apple-Style Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       Global Navigation Header
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="header-left-cluster">
+      <!-- Global Back Arrow (Visible on interfaces 2, 3, 4) -->
+      <button class="global-back-nav-btn" id="global-header-back-btn" title="Go back to previous interface">
+        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="brand-container" id="brand-home-btn">
+        <div class="brand-logo-mark">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 2L2 7h20L12 2z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>OurCity</h1>
+          <span>Public Infrastructure Transparency</span>
+        </div>
+      </div>
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><button class="nav-item-btn active" id="nav-btn-1" data-target="interface-1">City Map & Access</button></li>
+        <li><button class="nav-item-btn" id="nav-btn-2" data-target="interface-2">City Projects</button></li>
+        <li><button class="nav-item-btn" id="nav-btn-3" data-target="interface-3">Project Detail</button></li>
+        <li><button class="nav-item-btn" id="nav-btn-4" data-target="interface-4">Transparency Hub</button></li>
+      </ul>
+    </nav>
+
+    <div class="header-right">
+      <button class="city-badge-btn" id="header-city-indicator">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span id="current-city-name-nav">Mumbai</span>
+      </button>
+
+      <!-- Account Profile with Logout Button -->
+      <div class="user-profile-widget" id="user-header-menu">
+        <div class="user-avatar" id="header-user-avatar">GC</div>
+        <span class="user-name-label" id="header-user-name">Guest Citizen</span>
+      </div>
+
+      <button class="logout-btn" id="btn-header-logout" title="Log out of account">
+        <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Log Out</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       INTERFACE 1: Login Platform & Interactive India Map
+       ========================================================================= -->
+  <main id="interface-1" class="interface-view active-view">
+    <button class="admin-entry-btn" id="btn-open-admin" type="button" aria-label="Open Admin login">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3 3.5 7v5.5c0 4.2 3.6 7.2 8.5 9.5 4.9-2.3 8.5-5.3 8.5-9.5V7L12 3Z"></path>
+        <path d="M9 12.2 11 14l4-4.2"></path>
+      </svg>
+      <span>Admin</span>
+    </button>
+    <div class="interface-1-layout">
+      
+      <!-- Interactive India Map Section (Left side beside Login box) -->
+      <section class="map-visual-container" aria-label="Interactive India Map">
+        <div class="map-top-bar">
+          <div class="map-title-tag">
+            National Infrastructure Radar
+          </div>
+          <div class="map-actions-cluster">
+            <button class="map-reset-btn" id="btn-reset-map-zoom" title="Reset view to full national map">
+              Reset View
+            </button>
+            <div class="live-radar-badge">
+              <span class="radar-dot"></span> Live GPS
+            </div>
+          </div>
+        </div>
+
+        <div class="map-svg-wrapper">
+          <svg id="india-svg-map" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#0071e3" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#0071e3" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Inner Zoomable Group: Controlled by CSS/SVG Transform -->
+            <g id="map-zoom-group">
+              <image href="assets/india-states.svg" x="0" y="0" width="800" height="900" aria-hidden="true" />
+              <text class="india-map-label" x="755" y="875">INDIA</text>
+
+              <!-- Dynamic Spotlight Ambient Ring -->
+              <circle id="spotlight-circle" cx="192" cy="531" r="55" fill="url(#mapGlow)" opacity="0" />
+
+              <!-- 1. DELHI Metro Node -->
+              <g transform="translate(-95 -11)">
+                <g class="city-node-group" id="node-delhi" data-city="delhi">
+                  <circle class="city-node-ring" cx="375" cy="295" r="10" />
+                  <circle class="city-node-pin" cx="375" cy="295" r="6" />
+                  <text class="city-label-text" x="392" y="300">Delhi (NCR)</text>
+                  <text class="city-sub-label" x="392" y="313">44 Public Projects</text>
+                </g>
+              </g>
+
+              <!-- 2. MUMBAI Metro Node -->
+              <g transform="translate(-73 -34)">
+                <g class="city-node-group" id="node-mumbai" data-city="mumbai">
+                  <circle class="city-node-ring" cx="265" cy="565" r="10" />
+                  <circle class="city-node-pin" cx="265" cy="565" r="6" />
+                  <text class="city-label-text" x="168" y="570">Mumbai</text>
+                  <text class="city-sub-label" x="168" y="583">38 Public Projects</text>
+                </g>
+              </g>
+
+              <!-- 3. KOLKATA Metro Node -->
+              <g transform="translate(-86 -45)">
+                <g class="city-node-group" id="node-kolkata" data-city="kolkata">
+                  <circle class="city-node-ring" cx="595" cy="485" r="10" />
+                  <circle class="city-node-pin" cx="595" cy="485" r="6" />
+                  <text class="city-label-text" x="612" y="490">Kolkata</text>
+                  <text class="city-sub-label" x="612" y="503">26 Public Projects</text>
+                </g>
+              </g>
+
+              <!-- 4. BENGALURU Metro Node -->
+              <g transform="translate(-92 -31)">
+                <g class="city-node-group" id="node-bangalore" data-city="bangalore">
+                  <circle class="city-node-ring" cx="380" cy="720" r="10" />
+                  <circle class="city-node-pin" cx="380" cy="720" r="6" />
+                  <text class="city-label-text" x="396" y="725">Bengaluru</text>
+                  <text class="city-sub-label" x="396" y="738">36 Public Projects</text>
+                </g>
+              </g>
+
+              <!-- Localized Metro Urban Features (Visible on Zoom) -->
+              <!-- Delhi Localized Overlay -->
+              <g class="metro-zoom-detail" id="zoom-features-delhi" transform="translate(-95 -11)">
+                <circle cx="375" cy="295" r="45" fill="rgba(0, 113, 227, 0.04)" stroke="#0071e3" stroke-width="0.8" stroke-dasharray="3,3" />
+                <line x1="345" y1="280" x2="405" y2="310" stroke="#0071e3" stroke-width="1.2" />
+                <line x1="360" y1="320" x2="390" y2="270" stroke="#0071e3" stroke-width="1.2" />
+                <circle cx="360" cy="285" r="3" fill="#34c759" title="Aerocity Tunnel" />
+                <circle cx="395" cy="305" r="3" fill="#ff3b30" title="Barapullah Bridge" />
+                <circle cx="380" cy="275" r="3" fill="#34c759" title="Asita East Eco-Park" />
+                <circle cx="355" cy="315" r="3" fill="#ff9500" title="UER-II Expressway" />
+              </g>
+
+              <!-- Mumbai Localized Overlay -->
+              <g class="metro-zoom-detail" id="zoom-features-mumbai" transform="translate(-73 -34)">
+                <circle cx="265" cy="565" r="45" fill="rgba(0, 113, 227, 0.04)" stroke="#0071e3" stroke-width="0.8" stroke-dasharray="3,3" />
+                <line x1="240" y1="545" x2="285" y2="585" stroke="#0071e3" stroke-width="1.2" />
+                <line x1="250" y1="585" x2="280" y2="545" stroke="#0071e3" stroke-width="1.2" />
+                <circle cx="250" cy="550" r="3" fill="#34c759" title="Coastal Undersea Tunnel" />
+                <circle cx="280" cy="575" r="3" fill="#34c759" title="Atal Setu Sea Bridge" />
+                <circle cx="270" cy="555" r="3" fill="#ff3b30" title="BKC Wetland Eco-Park" />
+                <circle cx="258" cy="580" r="3" fill="#ff9500" title="Eastern Freeway Expressway" />
+              </g>
+
+              <!-- Kolkata Localized Overlay -->
+              <g class="metro-zoom-detail" id="zoom-features-kolkata" transform="translate(-86 -45)">
+                <circle cx="595" cy="485" r="45" fill="rgba(0, 113, 227, 0.04)" stroke="#0071e3" stroke-width="0.8" stroke-dasharray="3,3" />
+                <line x1="570" y1="470" x2="620" y2="500" stroke="#0071e3" stroke-width="1.2" />
+                <circle cx="580" cy="475" r="3" fill="#34c759" title="Under-River Hooghly Tunnel" />
+                <circle cx="610" cy="495" r="3" fill="#ff3b30" title="Maa Flyover Ramp Bridge" />
+                <circle cx="615" cy="475" r="3" fill="#34c759" title="New Town Solar Eco-Park" />
+                <circle cx="585" cy="505" r="3" fill="#ff9500" title="Kona Smart Expressway" />
+              </g>
+
+              <!-- Bengaluru Localized Overlay -->
+              <g class="metro-zoom-detail" id="zoom-features-bangalore" transform="translate(-92 -31)">
+                <circle cx="380" cy="720" r="45" fill="rgba(0, 113, 227, 0.04)" stroke="#0071e3" stroke-width="0.8" stroke-dasharray="3,3" />
+                <line x1="355" y1="705" x2="405" y2="735" stroke="#0071e3" stroke-width="1.2" />
+                <circle cx="365" cy="710" r="3" fill="#ff9500" title="Silk Board Transit Tunnel" />
+                <circle cx="395" cy="730" r="3" fill="#ff3b30" title="Ejipura Elevated Flyover" />
+                <circle cx="375" cy="735" r="3" fill="#34c759" title="Agara Wetland Eco-Park" />
+                <circle cx="390" cy="710" r="3" fill="#34c759" title="Outer Ring Road Smart Corridor" />
+              </g>
+
+            </g>
+          </svg>
+        </div>
+
+        <div class="map-city-highlight-overlay" id="map-spotlight-overlay">
+          <div class="overlay-city-info">
+            <h4 id="spotlight-title">Mumbai Metropolitan Region</h4>
+            <p id="spotlight-desc">38 Active Infrastructure Projects · ₹74,250 Cr Public Spend Tracked</p>
+          </div>
+          <span class="overlay-zoom-tag">Vector Focus</span>
+        </div>
+      </section>
+
+      <!-- Login & City Selection Box (Right side) -->
+      <section class="login-box-container" aria-label="Citizen Authentication Platform">
+        
+        <!-- STEP A: Form -->
+        <div id="auth-form-wrapper">
+          <div class="login-auth-header">
+            <h2>Welcome to OurCity</h2>
+            <p>Enter your details to explore public projects and budget audits.</p>
+            <p class="demo-auth-note">Demo login only. Any name, email, and password will work; no account is created.</p>
+          </div>
+
+          <!-- Simulated Login Form -->
+          <form id="citizen-auth-form">
+            <div class="form-group">
+              <label class="form-label" for="citizen-name-input">Full Name</label>
+              <input class="form-input" type="text" id="citizen-name-input" placeholder="Your name" autocomplete="name" pattern=".*\S.*" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="citizen-email-input">Email Address</label>
+              <input class="form-input" type="email" id="citizen-email-input" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="citizen-pass-input">Password</label>
+              <input class="form-input" type="password" id="citizen-pass-input" placeholder="Enter any password" autocomplete="current-password" required>
+            </div>
+
+            <button class="btn-primary-action" id="btn-auth-submit" type="submit">
+              <span>Continue to OurCity</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- STEP B: Post-Login Confirmation Stage -->
+        <div class="login-success-stage" id="login-success-wrapper">
+          <div class="success-badge-circle">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h3 id="welcome-citizen-title">You're signed in</h3>
+          <p id="welcome-citizen-subtitle">Demo session active · no account is created</p>
+
+          <!-- Inside the box: City Selector Section -->
+          <div class="city-select-sub-box">
+            <div class="city-select-title">
+              Select Your Metro City
+            </div>
+            <p class="city-select-desc">Choose a metropolitan area to inspect public infrastructure and expenditure:</p>
+
+            <div class="city-cards-grid">
+              <div class="city-pick-card" data-city="delhi" id="card-city-delhi">
+                <div class="city-name">Delhi (NCR)</div>
+                <div class="city-count">44 Public Projects</div>
+              </div>
+
+              <div class="city-pick-card selected" data-city="mumbai" id="card-city-mumbai">
+                <div class="city-name">Mumbai</div>
+                <div class="city-count">38 Public Projects</div>
+              </div>
+
+              <div class="city-pick-card" data-city="kolkata" id="card-city-kolkata">
+                <div class="city-name">Kolkata</div>
+                <div class="city-count">26 Public Projects</div>
+              </div>
+
+              <div class="city-pick-card" data-city="bangalore" id="card-city-bangalore">
+                <div class="city-name">Bengaluru</div>
+                <div class="city-count">36 Public Projects</div>
+              </div>
+            </div>
+
+            <!-- Get Started Button -->
+            <button class="btn-get-started" id="btn-get-started" type="button">
+              <span>View City Projects</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       INTERFACE 2: City Projects List
+       ========================================================================= -->
+  <section id="interface-2" class="interface-view">
+    <div class="interface-2-container">
+      
+      <!-- Prominent Left Back Button to Interface 1 -->
+      <div class="interface-nav-bar-left">
+        <button class="page-back-btn" id="i2-back-btn">
+          <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to City Map</span>
+        </button>
+      </div>
+
+      <!-- City Hero Banner -->
+      <div class="city-hero-banner">
+        <div class="city-hero-top">
+          <div class="city-hero-title">
+            <h2 id="i2-city-title">Mumbai Infrastructure Portfolio</h2>
+            <p id="i2-city-tagline">Financial Capital · Coastal Metropolis & Urban Infrastructure Hub</p>
+          </div>
+          <button class="city-switch-pill" id="i2-change-city-btn">
+            Switch Metro City
+          </button>
+        </div>
+
+        <div class="city-stats-row">
+          <div class="stat-item-box">
+            <span class="label">Tracked Projects</span>
+            <span class="value" id="i2-stat-projects">38</span>
+            <span class="trend">4 Active Tenders</span>
+          </div>
+          <div class="stat-item-box">
+            <span class="label">Sanctioned Budget</span>
+            <span class="value" id="i2-stat-budget">₹74,250 Cr</span>
+            <span class="trend">100% Taxpayer Funded</span>
+          </div>
+          <div class="stat-item-box">
+            <span class="label">Transparency Index</span>
+            <span class="value" id="i2-stat-score">86 / 100</span>
+            <span class="trend">Top Tier</span>
+          </div>
+          <div class="stat-item-box">
+            <span class="label">Verified Auditors</span>
+            <span class="value" id="i2-stat-auditors">14,820</span>
+            <span class="trend">Active Citizens</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="projects-filter-bar">
+        <div class="filter-pills-group" id="project-type-filters">
+          <button class="filter-pill active" data-type="all">All</button>
+          <button class="filter-pill" data-type="tunnel">Tunnels</button>
+          <button class="filter-pill" data-type="bridge">Bridges & Flyovers</button>
+          <button class="filter-pill" data-type="park">Urban Parks</button>
+          <button class="filter-pill" data-type="road">Roads & Expressways</button>
+        </div>
+
+        <div class="filter-pills-group" id="project-status-filters">
+          <button class="filter-pill active" data-status="all">All Statuses</button>
+          <button class="filter-pill" data-status="healthy">On Track</button>
+          <button class="filter-pill" data-status="watch">Under Review</button>
+          <button class="filter-pill" data-status="critical">Discrepancy</button>
+        </div>
+      </div>
+
+      <!-- 4 Core Projects Grid -->
+      <div class="projects-cards-grid" id="city-projects-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       INTERFACE 3: Project Overview, Simulation, Budget & YouTube Comments
+       ========================================================================= -->
+  <section id="interface-3" class="interface-view">
+    <div class="interface-3-container">
+      
+      <!-- Prominent Left Back Button to Interface 2 -->
+      <div class="interface-nav-bar-left">
+        <button class="page-back-btn" id="i3-back-btn">
+          <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to City Projects</span>
+        </button>
+      </div>
+
+      <!-- SECTION A: Overview + Contractor Card (Beside it) -->
+      <div class="project-top-overview-grid" id="project-overview-block">
+        
+        <!-- Left: Project Summary & Overview Card -->
+        <div class="overview-main-card">
+          <div class="overview-meta-tags">
+            <span class="project-type-tag" id="i3-type-tag">Undersea Tunnel</span>
+            <span class="project-status-pill healthy" id="i3-status-pill">On Track</span>
+            <span style="font-size: 0.78rem; color: var(--text-tertiary);" id="i3-sanction-code">MCGM/ENG/2023-CR-904</span>
+          </div>
+          <h2 id="i3-project-title">Mumbai Coastal Road Subsea & Malabar Hill Twin Tunnels</h2>
+          <p class="overview-summary-text" id="i3-project-overview">
+            India's first subsea highway tunnel stretching 2.07 km between Marine Drive and Priyadarshini Park, descending up to 20m under the Arabian Sea bed. Featuring 12.19m diameter slurry tunnel boring machines and automated ventilation.
+          </p>
+
+          <div class="overview-kpis-mini">
+            <div>
+              <span style="font-size: 0.74rem; color: var(--text-secondary); display: block;">Total Budget</span>
+              <strong style="font-size: 1.25rem; color: var(--text-primary);" id="i3-kpi-allocated">₹12,721 Cr</strong>
+            </div>
+            <div>
+              <span style="font-size: 0.74rem; color: var(--text-secondary); display: block;">Certified Progress</span>
+              <strong style="font-size: 1.25rem; color: var(--pastel-green-text);" id="i3-kpi-progress">86% Completed</strong>
+            </div>
+            <div>
+              <span style="font-size: 0.74rem; color: var(--text-secondary); display: block;">AI Evidence Match</span>
+              <strong style="font-size: 1.25rem; color: var(--pastel-blue-text);" id="i3-kpi-match">92% Verified</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Contractor Card Beside Overview -->
+        <div class="contractor-preview-card">
+          <div>
+            <span class="contractor-tag-label">Appointed Prime Contractor</span>
+            <h3 id="i3-contractor-name">Larsen & Toubro Heavy Civil</h3>
+          </div>
+
+          <ul class="contractor-details-list">
+            <li><span>Experience</span> <strong id="i3-contractor-exp">42 Years</strong></li>
+            <li><span>Completed Public Works</span> <strong id="i3-contractor-completed">148 Projects</strong></li>
+            <li><span>On-Time Milestone Rate</span> <strong id="i3-contractor-ontime">89%</strong></li>
+            <li><span>Civil Performance Rating</span> <strong id="i3-contractor-rating">4.7 / 5.0</strong></li>
+          </ul>
+
+          <button class="btn-contractor-profile" id="btn-view-contractor-profile" type="button">
+            View Contractor Profile
+          </button>
+        </div>
+
+      </div>
+
+      <!-- SECTION B: Completed Simulation Preview (Reveals as Overview Blurs) -->
+      <div class="simulation-preview-section" id="simulation-preview-block">
+        <div class="section-headline">
+          <h3>Completion Simulation & Visual Forecast</h3>
+          <p id="i3-simulation-caption">
+            Photorealistic architectural simulation comparing active construction state with the certified final design.
+          </p>
+        </div>
+
+        <!-- Interactive Drag Slider: Before vs After -->
+        <div class="slider-container-card">
+          <div class="interactive-slider-viewer" id="before-after-slider">
+            <span class="slider-badge-overlay left-badge">Active Construction</span>
+            <span class="slider-badge-overlay right-badge">Projected Completion</span>
+
+            <!-- Finished Simulation Image (Background) -->
+            <img class="slider-img img-after" id="simulation-after-img" src="assets/tunnel_simulation.jpg" alt="Completed Simulation Preview">
+
+            <!-- Raw Construction Image (Clipped Layer) -->
+            <div class="slider-img-wrapper-before" id="slider-before-wrapper">
+              <img class="slider-img img-before" id="simulation-before-img" src="assets/construction_progress.jpg" alt="Current Construction Site">
+            </div>
+
+            <!-- Dividing Handle Bar -->
+            <div class="slider-handle-bar" id="slider-handle">
+              <div class="slider-handle-button">⇄</div>
+            </div>
+
+            <!-- Range Input -->
+            <input type="range" class="slider-input-range" id="slider-range-input" min="0" max="100" value="50">
+          </div>
+
+          <!-- Simulation Specifications Strip -->
+          <div class="simulation-specs-grid" id="simulation-specs-grid">
+            <div class="spec-box">
+              <div class="title">Commute Time Reduction</div>
+              <div class="metric" id="spec-commute">45 mins saved</div>
+            </div>
+            <div class="spec-box">
+              <div class="title">Environmental Impact</div>
+              <div class="metric" id="spec-carbon">34,000 t CO₂/yr</div>
+            </div>
+            <div class="spec-box">
+              <div class="title">Design Transit Speed</div>
+              <div class="metric" id="spec-speed">80 km/h</div>
+            </div>
+            <div class="spec-box">
+              <div class="title">Infrastructure Longevity</div>
+              <div class="metric" id="spec-longevity">100+ years</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION C: Budget Allocation & Technical Analysis -->
+      <div class="budget-section-card" id="budget-technical-block">
+        <div class="section-headline">
+          <h3>Budget Allocation & Technical Accounting</h3>
+          <p>Verified financial disbursements against physical bill of quantities (BOQ)</p>
+        </div>
+
+        <div class="budget-kpi-row">
+          <div class="budget-kpi-box">
+            <div class="label">Sanctioned Allocation</div>
+            <div class="amount" id="budget-kpi-sanctioned">₹12,721 Cr</div>
+          </div>
+          <div class="budget-kpi-box">
+            <div class="label">Disbursed Expenditure</div>
+            <div class="amount" id="budget-kpi-spent">₹10,431 Cr</div>
+          </div>
+          <div class="budget-kpi-box">
+            <div class="label">Projected Final Cost</div>
+            <div class="amount" id="budget-kpi-eac">₹12,850 Cr</div>
+          </div>
+          <div class="budget-kpi-box">
+            <div class="label">Cost Efficiency (CPI)</div>
+            <div class="amount" id="budget-kpi-cpi">0.99</div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.85rem; color: var(--text-primary);">Allocation Breakdown by Category</h4>
+        <div class="budget-bars-list" id="budget-bars-container">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button class="nav-item-btn" id="btn-jump-to-sec4" style="background: var(--bg-hover); display: inline-flex;">
+            Inspect Tender Bids & News Evidence in Section 4 →
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION D: YouTube-Style Comments & Report Section -->
+      <div class="citizen-comments-container" id="comments-section-block">
+        <div class="comments-header-row">
+          <div class="comments-title">
+            Citizen Discussion & Public Reports (<span id="comments-count-header">18</span>)
+          </div>
+          <button class="btn-report-budget-whistleblower" id="btn-open-whistleblower-modal">
+            Submit Complaint or Project Report
+          </button>
+        </div>
+
+        <!-- YouTube Style Input Box -->
+        <div class="youtube-input-module">
+          <div class="yt-user-avatar" id="yt-current-avatar">RS</div>
+          <div class="yt-input-field-wrapper">
+            <textarea class="yt-textarea-comment" id="yt-comment-input" placeholder="Add a public comment or observation on this project..."></textarea>
+            <div class="yt-action-buttons-row">
+              <button class="btn-yt-cancel" id="btn-yt-cancel" type="button">Cancel</button>
+              <button class="btn-yt-submit" id="btn-yt-submit" type="button">Comment</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments Feed -->
+        <div class="yt-comments-stream" id="yt-comments-feed">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       INTERFACE 4 (SECTION 4): Transparency, Independent Evidence & AI Audit
+       ========================================================================= -->
+  <section id="interface-4" class="interface-view">
+    <div class="interface-4-container">
+      
+      <!-- Prominent Left Back Button to Interface 3 -->
+      <div class="interface-nav-bar-left">
+        <button class="page-back-btn" id="i4-back-btn">
+          <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Project Detail</span>
+        </button>
+      </div>
+
+      <!-- Hero Banner -->
+      <div class="section-4-hero">
+        <h2>OurCity Transparency & Evidence Hub</h2>
+        <p>
+          Cross-referencing government expenditure records with tender competition matrices, contractor track records, citizen whistleblower reports, and investigative journalism.
+        </p>
+      </div>
+
+      <div class="transparency-pillars-grid">
+        
+        <!-- PILLAR 1: Tender Transparency -->
+        <div class="pillar-card-box">
+          <div class="pillar-header-row">
+            <div class="pillar-title">
+              Tender Transparency & Competitive Bids Matrix
+            </div>
+            <span class="project-type-tag" id="tender-tender-id">TND-MUM-2022-094</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.86rem;">
+            Full disclosure of participating bidding companies, technical evaluations, quoted amounts, and contract award criteria.
+          </p>
+
+          <div style="overflow-x: auto;">
+            <table class="tender-matrix-table" id="tender-matrix-table">
+              <thead>
+                <tr>
+                  <th>Bidding Consortium</th>
+                  <th>Technical Evaluation</th>
+                  <th>Quoted Amount (₹ Cr)</th>
+                  <th>Variance vs Govt Baseline</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tender-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PILLAR 2: Contractor Track Record Dossier -->
+        <div class="pillar-card-box">
+          <div class="pillar-header-row">
+            <div class="pillar-title">
+              Contractor History & Accountability Profile
+            </div>
+            <span class="live-radar-badge">Verified Dossier</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.25rem;">
+            <div>
+              <h4 id="sec4-contractor-title" style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">Larsen & Toubro Heavy Civil</h4>
+              <p id="sec4-contractor-lead" style="color: var(--text-secondary); font-size: 0.84rem;">Lead Engineer: Er. K. Venkataraman (FIE)</p>
+              <p id="sec4-contractor-hq" style="color: var(--text-secondary); font-size: 0.84rem;">Headquarters: Mumbai, India</p>
+            </div>
+            <div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="stat-item-box">
+                  <span class="label">Past Public Works</span>
+                  <span class="value" id="sec4-contractor-completed">148</span>
+                </div>
+                <div class="stat-item-box">
+                  <span class="label">Integrity Index</span>
+                  <span class="value" id="sec4-contractor-integrity">94 / 100</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h5 style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.65rem;">Selected Past Public Infrastructure Works</h5>
+          <div id="sec4-contractor-past-projects" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- PILLAR 3: Public Reporting & Whistleblower Dossier -->
+        <div class="pillar-card-box">
+          <div class="pillar-header-row">
+            <div class="pillar-title">
+              Public Reporting & Whistleblower Dossier
+            </div>
+            <button class="btn-report-budget-whistleblower" id="btn-file-public-report">
+              File a New Public Report
+            </button>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.86rem;">
+            Citizen reports documenting budget inflation, stalled milestones, or material substitutions.
+          </p>
+
+          <div id="public-reports-docket-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- PILLAR 4: Independent Evidence & News Media Feeds -->
+        <div class="pillar-card-box">
+          <div class="pillar-header-row">
+            <div class="pillar-title">
+              Independent Media & CAG Audit Reports
+            </div>
+            <span class="overlay-zoom-tag">Independent Evidence</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.86rem;">
+            Investigative journalism and Comptroller & Auditor General (CAG) findings mapped against project timelines.
+          </p>
+
+          <div class="news-evidence-grid" id="news-reports-grid">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- PILLAR 5: AI Budget Analysis & Budget Evidence Match % -->
+        <div class="pillar-card-box">
+          <div class="pillar-header-row">
+            <div class="pillar-title">
+              AI Budget Analysis & Evidence Match Index
+            </div>
+            <span class="live-radar-badge">Automated Auditor</span>
+          </div>
+
+          <div class="ai-audit-scorecard">
+            <div class="circular-match-gauge">
+              <div class="gauge-big-number" id="ai-match-percentage">92%</div>
+              <div class="gauge-caption">Budget Evidence Match</div>
+              <div class="gauge-sub-caption">Official claims corroborated by independent records</div>
+            </div>
+
+            <div class="ai-audit-breakdown-details">
+              <div class="ai-metric-bar-item">
+                <div class="ai-metric-meta">
+                  <span>Material Wholesale Cost Realism</span>
+                  <span id="ai-score-material">94%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill-cyan" id="ai-bar-material" style="width: 94%;"></div>
+                </div>
+              </div>
+
+              <div class="ai-metric-bar-item">
+                <div class="ai-metric-meta">
+                  <span>Tender Bidding Competitiveness</span>
+                  <span id="ai-score-tender">91%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill-cyan" id="ai-bar-tender" style="width: 91%;"></div>
+                </div>
+              </div>
+
+              <div class="ai-metric-bar-item">
+                <div class="ai-metric-meta">
+                  <span>Disbursement vs Physical Milestones</span>
+                  <span id="ai-score-progress">95%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill-cyan" id="ai-bar-progress" style="width: 95%;"></div>
+                </div>
+              </div>
+
+              <div class="ai-metric-bar-item">
+                <div class="ai-metric-meta">
+                  <span>Independent Media Sentiment Alignment</span>
+                  <span id="ai-score-media">88%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill-cyan" id="ai-bar-media" style="width: 88%;"></div>
+                </div>
+              </div>
+
+              <div class="ai-findings-box">
+                <h4>Auditor Synthesis</h4>
+                <p id="ai-verdict-text" style="font-size: 0.84rem; color: var(--text-primary); margin-bottom: 0.4rem;"></p>
+                <ul id="ai-key-notes-list">
+                  <!-- Rendered dynamically -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       MODAL: Contractor Transparency Profile
+       ========================================================================= -->
+  <div class="modal-overlay" id="contractor-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modal-close-contractor">&times;</button>
+      <div style="margin-bottom: 1.25rem;">
+        <span class="contractor-tag-label">Contractor Performance Audit</span>
+        <h3 id="modal-contractor-name" style="font-size: 1.45rem; font-weight: 700; color: var(--text-primary);">Contractor Name</h3>
+        <p id="modal-contractor-sub" style="color: var(--text-secondary); font-size: 0.85rem;">Corporate Registry & Track Record</p>
+      </div>
+
+      <div class="city-stats-row" style="margin-bottom: 1.75rem;">
+        <div class="stat-item-box">
+          <span class="label">Experience</span>
+          <span class="value" id="modal-contractor-exp">40+ Yrs</span>
+        </div>
+        <div class="stat-item-box">
+          <span class="label">Completed Works</span>
+          <span class="value" id="modal-contractor-count">148</span>
+        </div>
+        <div class="stat-item-box">
+          <span class="label">Milestone Rate</span>
+          <span class="value" id="modal-contractor-rate">89%</span>
+        </div>
+        <div class="stat-item-box">
+          <span class="label">Performance Rating</span>
+          <span class="value" id="modal-contractor-rating">4.7 / 5.0</span>
+        </div>
+      </div>
+
+      <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.65rem;">Verified Public Sector Track Record</h4>
+      <div id="modal-contractor-projects-list" style="display: flex; flex-direction: column; gap: 0.65rem;">
+        <!-- Injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: Whistleblower Public Report Filing
+       ========================================================================= -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modal-close-report">&times;</button>
+      <div style="margin-bottom: 1.25rem;">
+        <span class="contractor-tag-label" style="color: var(--pastel-red-text);">Public Grievance Registry</span>
+        <h3 style="font-size: 1.45rem; font-weight: 700; color: var(--text-primary);">Complaint or Project Report</h3>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Report a project issue or share a concern with the civic community.</p>
+      </div>
+
+      <form id="public-whistleblower-form">
+        <div class="report-verification-notice" id="report-verification-notice">
+          Verify to unlock the complaint form and add supporting photos. This demo does not check identity documents.
+        </div>
+        <div class="report-photo-actions">
+          <button class="btn-secondary-action" id="btn-report-add-photo" type="button">Add Photo</button>
+          <span id="report-photo-count">No project photos attached</span>
+        </div>
+        <input id="report-photos-input" class="visually-hidden-input" type="file" accept="image/*" multiple>
+        <div class="report-photo-list" id="report-photo-list"></div>
+
+        <fieldset id="report-details-fields" disabled>
+          <div class="form-group">
+            <label class="form-label" for="report-category">Report Category</label>
+            <select class="form-input" id="report-category" required>
+              <option value="Project complaint / service issue">Project complaint / service issue</option>
+              <option value="Project status / quality concern">Project status / quality concern</option>
+              <option value="Unrealistic Budget / Disproportionate Spend">Unrealistic Budget / Disproportionate Spend</option>
+              <option value="Suspicious Tender Bidding & Collusion">Suspicious Tender Bidding & Collusion</option>
+              <option value="Ghost Invoicing / Material Substitution">Ghost Invoicing / Material Substitution</option>
+              <option value="Unexplained Work Stoppage & Delay">Unexplained Work Stoppage & Delay</option>
+              <option value="Safety & Structural Quality Hazard">Safety & Structural Quality Hazard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="report-description">Detailed Description & Evidence</label>
+            <textarea class="form-input" id="report-description" rows="4" placeholder="Describe the project issue or complaint you witnessed..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="report-witness">Your Name / Title (Optional)</label>
+            <input class="form-input" type="text" id="report-witness" placeholder="Resident / Civil Engineer / Taxpayer">
+          </div>
+
+          <button class="btn-primary-action" type="submit">
+            Submit Complaint
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay verification-modal-overlay" id="verification-modal">
+    <div class="modal-card verification-modal-card">
+      <button class="modal-close-btn" id="modal-close-verification" type="button" aria-label="Close verification">&times;</button>
+      <div id="verification-steps">
+        <span class="contractor-tag-label">Camera Verification · Demo</span>
+        <h3 class="verification-title">Verify before adding photos</h3>
+        <p class="verification-privacy-note">Select your Aadhaar image from this device, then take a live face photo using your camera. Neither image is uploaded or retained; this demo does not verify identity authenticity.</p>
+
+        <div class="verification-step-card">
+          <span class="verification-step-number">1</span>
+          <div>
+            <span class="form-label">Aadhaar card image</span>
+            <button class="btn-secondary-action" id="btn-add-aadhaar-photo" type="button">Add Aadhaar Photo</button>
+            <input class="visually-hidden-input" id="aadhaar-photo-input" type="file" accept="image/*">
+            <span class="verification-file-status" id="aadhaar-file-status">No file selected</span>
+          </div>
+        </div>
+
+        <div class="verification-step-card is-locked" id="face-photo-step">
+          <span class="verification-step-number">2</span>
+          <div>
+            <span class="form-label">Live face photo</span>
+            <ol class="face-photo-guide">
+              <li>Face a window or other even light source.</li>
+              <li>Hold the camera at eye level and look into the lens.</li>
+              <li>Keep your full face visible; remove hats and sunglasses.</li>
+              <li>Use a plain background and keep the photo in focus.</li>
+            </ol>
+            <video class="verification-camera-preview" id="face-camera-preview" autoplay muted playsinline hidden></video>
+            <canvas class="verification-camera-preview" id="face-capture-preview" hidden></canvas>
+            <div class="verification-camera-actions">
+              <button class="btn-secondary-action" id="btn-start-face-camera" type="button" disabled>Start Camera</button>
+              <button class="btn-secondary-action" id="btn-capture-face-photo" type="button" disabled hidden>Capture Face Photo</button>
+            </div>
+            <span class="verification-file-status" id="face-file-status" role="status">Add your Aadhaar image first</span>
+          </div>
+        </div>
+        <button class="btn-primary-action" id="btn-complete-verification" type="button" disabled>Complete Demo Verification</button>
+      </div>
+
+      <div class="verification-success" id="verification-success" hidden>
+        <div class="verification-success-mark" aria-hidden="true">
+          <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="23"></circle><path d="m15 27 8 8 15-17"></path></svg>
+        </div>
+        <h3>Demo verification complete</h3>
+        <p>You can now attach project photos and submit your report. Verification files were discarded from this form.</p>
+        <button class="btn-primary-action" id="btn-return-to-report" type="button">Continue to Report</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="admin-login-modal">
+    <div class="modal-card admin-login-card">
+      <button class="modal-close-btn" id="modal-close-admin-login" type="button" aria-label="Close admin login">&times;</button>
+      <span class="contractor-tag-label">OurCity · Demo Admin</span>
+      <h3 class="verification-title">Admin sign in</h3>
+      <p class="admin-demo-disclaimer">This local demo login is not secure and is not shared across visitors.</p>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label" for="admin-username">Username</label>
+          <input class="form-input" id="admin-username" name="username" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="admin-password">Password</label>
+          <input class="form-input" id="admin-password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="admin-demo-credentials">Demo credentials: <strong>admin</strong> / <strong>OurCityDemo!</strong></p>
+        <p class="admin-login-error" id="admin-login-error" role="alert" hidden>Those demo credentials did not match.</p>
+        <button class="btn-primary-action" type="submit">Open Admin Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay admin-dashboard-overlay" id="admin-dashboard-modal">
+    <div class="modal-card admin-dashboard-card">
+      <div class="admin-dashboard-header">
+        <div>
+          <span class="contractor-tag-label">OurCity · Demo Admin</span>
+          <h2>Community moderation</h2>
+          <p>Manage in-memory demo complaints and project comments.</p>
+        </div>
+        <button class="btn-secondary-action" id="btn-close-admin-dashboard" type="button">Exit Admin</button>
+      </div>
+      <div class="admin-moderation-grid">
+        <section class="admin-moderation-section">
+          <h3>Project complaints <span id="admin-complaint-count">0</span></h3>
+          <div class="admin-moderation-list" id="admin-complaints-list"></div>
+        </section>
+        <section class="admin-moderation-section">
+          <h3>Project comments <span id="admin-comment-count">0</span></h3>
+          <div class="admin-moderation-list" id="admin-comments-list"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
